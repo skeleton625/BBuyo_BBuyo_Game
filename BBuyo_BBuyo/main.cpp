@@ -33,14 +33,14 @@ int main()
 	cout << "BBuyo BBuyo Start!!" << '\n';
 	cout << "Waiting . . . ";
 
-	Sleep(3000);
+	//Sleep(3000);
 
 	random_device random;
 	mt19937 engine(random());
 	uniform_int_distribution<int> BT(0, 2);
 	uniform_int_distribution<int> BC(1, 4);
 	
-	int inp = 0;
+	int inp = 0, types = 0;
 	int colors[5];
 	bool down_flag = false;
 
@@ -64,23 +64,44 @@ int main()
 					break;
 				case 's':
 					bb.move(2);
+					down_flag = true;
 					break;
 				case 'x':
 					bb.down_all();
+					down_flag = true;
 					break;
 				case 'e':
 					bb.rotate();
 					break;
 			}
 
-			if (!bb.can_down())
+			if (!bb.can_down() && down_flag)
 			{
+				bbuyo_obj->down_all();
+				bbuyo_obj->print();
+				Sleep(1000);
+				while (bbuyo_obj->explosion())
+				{
+					bbuyo_obj->down_all();
+					bbuyo_obj->print();
+					Sleep(1000);
+				}
+					
+
+				types = BT(engine);
+				if(!bbuyo_obj->can_make(types))
+					break;
+
 				for (int i = 0; i < 5; i++)
 					colors[i] = BC(engine);
 				bb = generate_block(BT(engine), colors);
 			}
+			down_flag = false;
 			bbuyo_obj->print();
 		}
 	}
+
+	cout << "GAME OVER!!" << '\n';
+	cout << "Your Final Score : " << bbuyo_obj->get_score();
 	return 0;
 }
