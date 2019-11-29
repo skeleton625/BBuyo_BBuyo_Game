@@ -18,6 +18,25 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="array_2d.h" />
+    <ClInclude Include="big_block.h" />
+    <ClInclude Include="block.h" />
+    <ClInclude Include="color_block.h" />
+    <ClInclude Include="cross_block.h" />
+    <ClInclude Include="fold_block.h" />
+    <ClInclude Include="tree_block.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="array_2d.cpp" />
+    <ClCompile Include="big_block.cpp" />
+    <ClCompile Include="block.cpp" />
+    <ClCompile Include="color_block.cpp" />
+    <ClCompile Include="cross_block.cpp" />
+    <ClCompile Include="fold_block.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="tree_block.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{EAF03AD2-1AE2-4561-9CB2-E840EE0CA529}</ProjectGuid>
@@ -76,6 +95,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,8 +142,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
