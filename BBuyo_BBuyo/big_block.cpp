@@ -1,17 +1,18 @@
 #include "block.h"
 #include "array_2d.h"
 #include "big_block.h"
+#include "color_block.h"
 
 // 큰 블록의 생성자, 소멸자
 big_block::big_block(int _type)
 {
 	this->block_type = _type;
-	mid_x = 1, mid_y = 2;
+	mid_x = 2, mid_y = 3;
 }
 
 big_block::~big_block()
 {
-	while(!v.empty())
+	while (!v.empty())
 		v.pop_back();
 }
 
@@ -39,14 +40,9 @@ bool big_block::can_right()
 
 bool big_block::can_down()
 {
-	int x, y;
-	block* tmp;
 	for (block* b : v)
 	{
-		x = b->get_x() - 1;
-		y = b->get_y();
-		tmp = array_2d::get_block(x, y);
-		if (tmp != NULL && tmp->get_fixed())
+		if (!b->can_down())
 			return false;
 	}
 	return true;
@@ -60,7 +56,8 @@ bool big_block::can_rotate()
 		x = b->get_x();
 		y = b->get_y();
 		rotate_vertex(x, y);
-		if (array_2d::get_block(x, y)->get_fixed())
+		block* nb = array_2d::get_block(x, y);
+		if (nb != NULL && nb->get_fixed())
 			return false;
 	}
 	return true;
@@ -70,8 +67,8 @@ void big_block::rotate_vertex(int& x, int& y)
 {
 	int nx = (y - mid_y) * -1;
 	int ny = (x - mid_x);
-	x = nx + mid_y;
-	y = ny + mid_x;
+	x = nx + mid_x;
+	y = ny + mid_y;
 }
 
 // 큰 블록의 이동, 회전 함수
@@ -110,6 +107,8 @@ void big_block::rotate()
 {
 	if (!can_rotate())
 		return;
+	for (block* b : v)
+		array_2d::delete_block(b->get_x(), b->get_y());
 
 	int x, y;
 	for (block* b : v)
@@ -145,7 +144,7 @@ void big_block::down()
 		array_2d::delete_block(b->get_x(), b->get_y());
 	for (block* b : v)
 		b->down();
-	--mid_x;
+	++mid_x;
 }
 
 void big_block::down_all()
@@ -153,13 +152,4 @@ void big_block::down_all()
 	for (block* b : v)
 		b->down_all();
 	mid_x = v[2]->get_x();
-}
-
-void big_block::fix_blocks()
-{
-	for (block* b : v)
-	{
-		b->set_fixed(true);
-		b->can_merge();
-	}
 }
