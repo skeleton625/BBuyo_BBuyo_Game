@@ -1,5 +1,4 @@
 #pragma once
-
 #include "big_block.h"
 
 class cross_block : public big_block

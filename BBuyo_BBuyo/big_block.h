@@ -1,28 +1,26 @@
 #pragma once
 #include <vector>
-#include "block.h"
 using namespace std;
 
 class big_block
 {
 protected:
 	// 큰 블록에 연결된 블록들 변수
-	vector<block*> v;
-	// 큰 블록 정의 enum
-	enum _type
-	{ FOLD, TREE, CROSS };
+	vector<class block*> v;
 private:
 	// 큰 블록의 중간 블록 위치 변수
 	int mid_x, mid_y;
 	// 큰 블록의 타입 변수
-	_type block_type;
+	int block_type;
 	// 큰 블록의 이동 가능 여부 확인 함수들
 	bool can_left();
 	bool can_right();
-	bool can_down();
+	bool can_rotate();
+	
+	void rotate_vertex(int& x, int& y);
 public:
 	// 큰 블록의 생성자, 소멸자
-	big_block(_type _type);
+	big_block(int type);
 	~big_block();
 	// 큰 블록의 이동, 회전 함수
 	bool move(int input);
@@ -30,6 +28,7 @@ public:
 	// 큰 블록의 모든 블록을 이동시키는 함수
 	void left();
 	void right();
-	bool down();
-	bool down_all();
+	void down();
+	void down_all();
+	bool can_down();
 };
