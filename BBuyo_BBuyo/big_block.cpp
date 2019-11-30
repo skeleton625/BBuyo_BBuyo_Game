@@ -6,6 +6,7 @@
 // 큰 블록의 생성자, 소멸자
 big_block::big_block(int _type)
 {
+	rot_cnt = 0;
 	this->block_type = _type;
 	mid_x = 2, mid_y = 3;
 }
@@ -118,7 +119,20 @@ void big_block::rotate()
 		rotate_vertex(x, y);
 		b->set_location(x, y);
 	}
+
+	++rot_cnt;
+	if (rot_cnt == 2 || rot_cnt == 4)
+	{
+		vector<block*> new_v = vector<block*>(v.size(), NULL);
+		for (int i = 0; i < v.size(); i++)
+			new_v[v.size() - i - 1] = v[i];
+		v = new_v;
+	}
+
+	if (rot_cnt == 4)
+		rot_cnt = 0;
 }
+
 // 큰 블록의 모든 블록을 이동시키는 함수
 void big_block::left()
 {
@@ -149,7 +163,18 @@ void big_block::down()
 
 void big_block::down_all()
 {
+	switch (block_type)
+	{
+		case 0:
+			mid_x = v[1]->get_x();
+			break;
+		case 1:
+			mid_x = v[1]->get_x();
+			break;
+		case 2:
+			mid_x = v[2]->get_x();
+			break;
+	}
 	for (block* b : v)
 		b->down_all();
-	mid_x = v[2]->get_x();
 }
