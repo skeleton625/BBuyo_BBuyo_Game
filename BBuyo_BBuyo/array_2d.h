@@ -5,16 +5,13 @@ using namespace std;
 // 뿌요뿌요 보드판의 가로, 세로 길이
 #define W 7
 #define H 14
-#define BROWN 6
-#define RED 4
-#define GREEN 2
-#define BLUE 1
+#define SAFE_DELETE(p) { if(p) delete(p); p = NULL; }
 
 // 뿌요뿌요 게임의 전체적인 관리를 진행하는 클래스
 class array_2d
 {
 private:
-	int color[5] = { 15, 1, 2, 4, 6 };
+	int color[5] = { 15, 1, 2, 4, 8 };
 	// 폭파된 블록을 set 컨테어너에서 제거한 함수
 	void remove_explosion();
 	// 뿌요뿌요 게임의 현재 점수
