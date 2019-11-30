@@ -55,6 +55,7 @@ void block::down_all()
 	array_2d::delete_block(x, y);
 	while (can_down())
 		++x;
+	fixed = true;
 	array_2d::insert(x, y, this);
 	set_group(new color_block(this));
 	can_merge();
@@ -79,10 +80,7 @@ bool block::can_down()
 	if (down_b == NULL || !down_b->fixed)
 		return true;
 	else
-	{
-		fixed = true;
 		return false;
-	}
 }
 
 bool block::can_left()
