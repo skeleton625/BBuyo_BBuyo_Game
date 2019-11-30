@@ -6,8 +6,9 @@
 #include "big_block.h"
 #include "color_block.h"
 
-int array_2d::explo_cnt = 0;
 int array_2d::score = 0;
+int array_2d::explo_cnt = 0;
+
 block *array_2d::block_array[H][W];
 set<color_block*> array_2d::explosion_s;
 
@@ -74,13 +75,26 @@ bool array_2d::can_make(int types)
 // 블록 폭파 관련 함수들
 bool array_2d::explosion()
 {
+	int nx, ny, col;
+	int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
 	bool flag = false;
 	for (color_block* blocks : explosion_s)
 	{
 		for (block* b : blocks->get_set())
 		{
+			for (int i = 0; i < 4; i++)
+			{
+				col = 5;
+				nx = dir[i][0] + b->get_x();
+				ny = dir[i][1] + b->get_y();
+				if (block_array[nx][ny] != NULL)
+					col = block_array[nx][ny]->get_color();
+				if (col == 4)
+					SAFE_DELETE(block_array[nx][ny]);
+			}
 			block_array[b->get_x()][b->get_y()] = NULL;
-			delete(b);
+			SAFE_DELETE(b);
 		}
 		flag = true;
 		explo_cnt++;
@@ -105,7 +119,7 @@ void array_2d::insert_explosion(color_block* group)
 void array_2d::remove_explosion()
 {
 	for (color_block* group : explosion_s)
-		delete(group);
+		SAFE_DELETE(group);
 
 	explosion_s = set<color_block*>();
 }
@@ -184,6 +198,18 @@ block* array_2d::get_block(int x, int y)
 // 모든 블록을 내리는 함수
 void array_2d::down_all()
 {
+	
+	for (int i = H - 2; i > 0; i--)
+	{
+		for (int j = 1; j < W - 1; j++)
+		{
+			if (block_array[i][j] == NULL)
+				continue;
+			block_array[i][j]->down_all();
+			
+		}
+	}
+
 	int flag;
 	for (int i = H - 2; i > 0; i--)
 	{
@@ -195,33 +221,6 @@ void array_2d::down_all()
 				++flag;
 				continue;
 			}
-
-			int nx = i;
-			while (block_array[nx][j]->can_down())
-			{
-				block_array[nx][j]->down();
-				block_array[nx][j]->set_group
-									(new color_block(block_array[nx][j]));
-				block_array[nx][j] = NULL;
-				++nx;
-			}
-			block_array[nx][j]->can_merge();
-		}
-	}
-
-	
-
-	for (int i = H - 2; i > 0; i--)
-	{
-		flag = 0;
-		for (int j = 1; j < W - 1; j++)
-		{
-			if (block_array[i][j] == NULL)
-			{
-				++flag;
-				continue;
-			}
-
 			if (block_array[i][j]->can_explosion())
 				insert_explosion(block_array[i][j]->get_group());
 		}
