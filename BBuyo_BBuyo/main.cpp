@@ -86,7 +86,6 @@ int main()
 					bbuyo_obj->print();
 					Sleep(1000);
 				}
-					
 
 				types = BT(engine);
 				if(!bbuyo_obj->can_make(types))
