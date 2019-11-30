@@ -5,8 +5,11 @@ using namespace std;
 class big_block
 {
 protected:
+	int rot_cnt;
 	// 큰 블록에 연결된 블록들 변수
 	vector<class block*> v;
+	void rotate_vertex(int& x, int& y);
+	bool can_rotate();
 private:
 	// 큰 블록의 중간 블록 위치 변수
 	int mid_x, mid_y;
@@ -15,9 +18,6 @@ private:
 	// 큰 블록의 이동 가능 여부 확인 함수들
 	bool can_left();
 	bool can_right();
-	bool can_rotate();
-	
-	void rotate_vertex(int& x, int& y);
 public:
 	// 큰 블록의 생성자, 소멸자
 	big_block(int type);
