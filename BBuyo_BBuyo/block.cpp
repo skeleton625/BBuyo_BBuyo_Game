@@ -3,15 +3,7 @@
 #include "color_block.h"
 #include <iostream>
 
-// 블록 객체 생성자
-block::block(int color)
-{
-	fixed = false;
-	x = 0, y = 0;
-	this->color = color;
-	group = new color_block(this);
-}
-
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
 // 정의, 반환 함수들
 int block::get_color() { return color; }
 int block::get_x() { return x; }
@@ -21,7 +13,18 @@ color_block* block::get_group() { return group; }
 void block::set_color(int color) { this->color = color; }
 void block::set_fixed(bool fixed) { this->fixed = fixed; }
 void block::set_group(color_block* group) { this->group = group; }
-void block::set_location(int x, int y) {
+
+// 블록 객체 생성자
+block::block(int color)
+{
+	fixed = false;
+	x = 0, y = 0;
+	this->color = color;
+	group = new color_block(this);
+}
+
+void block::set_location(int x, int y) 
+{
 	this->x = x, this->y = y; 
 	array_2d::insert(x, y, this);
 }
@@ -53,7 +56,10 @@ void block::down_all()
 	while (can_down())
 		++x;
 	array_2d::insert(x, y, this);
+	set_group(new color_block(this));
+	can_merge();
 }
+
 // 매개변수 블록과 현재 블록의 그룹을 합침
 void block::merge(block *b)
 {
@@ -62,8 +68,8 @@ void block::merge(block *b)
 	color_block* d2 = group;
 	new_blocks->insert(d1->get_set());
 	new_blocks->insert(d2->get_set());
-	delete(d1);
-	delete(d2);
+	SAFE_DELETE(d1);
+	SAFE_DELETE(d2);
 }
 
 // 이도 가능 여부 파악 함수들
@@ -99,8 +105,6 @@ bool block::can_right()
 
 void block::can_merge()
 {
-	int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
-
 	int flag = 0;
 	for (int i = 0; i < 4; i++)
 	{
@@ -126,7 +130,7 @@ bool block::can_explosion()
 // ??
 bool block::find_merge(block *b)
 {
-	if (b->color == 0)
+	if (b->color == 0 || b->color == 4)
 		return false;
 
 	set<block*> tmp = group->get_set();
