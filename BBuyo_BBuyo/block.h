@@ -12,6 +12,7 @@ private:
 
 	// 블록의 합병 함수들
 	void merge(block *b);
+	void split(block *b);
 	bool find_merge(block *b);
 public:
 	// 블록 객체의 생성자, 소멸자
@@ -32,7 +33,7 @@ public:
 	void right();
 	void left();
 	void down();
-	void down_all();
+	void down_all(bool flag);
 	// 현재 블록의 기능 가능 여부 확인 함수들
 	bool can_left();
 	bool can_right();
