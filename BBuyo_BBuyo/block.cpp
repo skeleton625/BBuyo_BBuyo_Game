@@ -50,15 +50,21 @@ void block::down()
 	array_2d::insert(x, y, this);
 }
 // 못 내려갈 때까지 이동
-void block::down_all()
+void block::down_all(bool flag)
 {
 	array_2d::delete_block(x, y);
+
+	if (can_down() && flag)
+	{
+		++x;
+		split(this);
+	}
+
 	while (can_down())
 		++x;
 	fixed = true;
 	array_2d::insert(x, y, this);
-	set_group(new color_block(this));
-	can_merge();
+	if(flag) can_merge();
 }
 
 // 매개변수 블록과 현재 블록의 그룹을 합침
@@ -71,6 +77,16 @@ void block::merge(block *b)
 	new_blocks->insert(d2->get_set());
 	SAFE_DELETE(d1);
 	SAFE_DELETE(d2);
+}
+
+void block::split(block *b)
+{
+	set<block*> g = group->get_set();
+	set<block*>::iterator it = g.find(b);
+	if(it != g.end())
+		g.erase(it);
+	group = NULL;
+	group = new color_block(this);
 }
 
 // 이도 가능 여부 파악 함수들

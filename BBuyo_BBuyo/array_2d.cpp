@@ -205,7 +205,7 @@ void array_2d::down_all()
 		{
 			if (block_array[i][j] == NULL)
 				continue;
-			block_array[i][j]->down_all();
+			block_array[i][j]->down_all(true);
 		}
 	}
 

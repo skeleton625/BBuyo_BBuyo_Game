@@ -176,5 +176,5 @@ void big_block::down_all()
 			break;
 	}
 	for (block* b : v)
-		b->down_all();
+		b->down_all(false);
 }
