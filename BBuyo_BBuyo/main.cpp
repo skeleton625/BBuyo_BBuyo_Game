@@ -30,23 +30,10 @@ int main()
 	cout.tie(false);
 	ios::sync_with_stdio(false);
 	
-	string break_files[5] = 
-		{
-			"sound\\break_1.wav",
-			"sound\\break_2.wav",
-			"sound\\break_3.wav",
-			"sound\\break_4.wav",
-			"sound\\break_5.wav"
-		};
-	string cast_files[5] =
-		{
-			"sound\\cast_1.wav",
-			"sound\\cast_2.wav",
-			"sound\\cast_3.wav",
-			"sound\\cast_4.wav",
-			"sound\\cast_5.wav"
-		};
-	string move_file = "sound\\move.wav";
+	// 사운드 효과 음성 파일 경로 변수들
+	string *break_files;
+	string *cast_files;
+	string move_file;
 
 	array_2d* bbuyo_obj = new array_2d();
 
@@ -112,6 +99,7 @@ int main()
 				int explo = 0;
 				while (bbuyo_obj->explosion(explo))
 				{
+					// ??
 					workers.push_back(thread(sound_effect.play_break_sound, explo-1));
 					bbuyo_obj->down_all();
 					bbuyo_obj->print();
