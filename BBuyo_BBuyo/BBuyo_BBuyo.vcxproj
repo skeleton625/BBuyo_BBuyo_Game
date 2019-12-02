@@ -25,6 +25,7 @@
     <ClInclude Include="color_block.h" />
     <ClInclude Include="cross_block.h" />
     <ClInclude Include="fold_block.h" />
+    <ClInclude Include="sound.h" />
     <ClInclude Include="tree_block.h" />
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +36,7 @@
     <ClCompile Include="cross_block.cpp" />
     <ClCompile Include="fold_block.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sound.cpp" />
     <ClCompile Include="tree_block.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
