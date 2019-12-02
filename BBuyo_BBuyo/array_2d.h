@@ -34,7 +34,7 @@ public:
 	int get_score();
 
 	// 합쳐진 블록 폭파 함수
-	bool explosion();
+	int explosion(int& cnt);
 	// 모든 블록을 내리는 함수
 	void down_all();
 	// 정적 함수들

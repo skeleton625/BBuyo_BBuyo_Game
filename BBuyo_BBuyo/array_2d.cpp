@@ -73,7 +73,7 @@ bool array_2d::can_make(int types)
 }
 
 // 블록 폭파 관련 함수들
-bool array_2d::explosion()
+int array_2d::explosion(int& cnt)
 {
 	int nx, ny, col;
 	int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
@@ -81,6 +81,7 @@ bool array_2d::explosion()
 	bool flag = false;
 	for (color_block* blocks : explosion_s)
 	{
+		++cnt;
 		for (block* b : blocks->get_set())
 		{
 			for (int i = 0; i < 4; i++)
@@ -100,13 +101,11 @@ bool array_2d::explosion()
 		explo_cnt++;
 	}
 	if (flag)
-	{
 		remove_explosion();
-		return true;
-	}
-		
 	else
-		return false;
+		cnt = 0;
+
+	return cnt;
 }
 void array_2d::insert_explosion(color_block* group)
 {
