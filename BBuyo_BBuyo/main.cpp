@@ -1,7 +1,9 @@
+#include <random>
+#include <thread>
 #include <iostream>
 #include <Windows.h>
-#include <random>
 #include <conio.h>
+#include "sound.h"
 #include "array_2d.h"
 #include "fold_block.h"
 #include "tree_block.h"
@@ -27,8 +29,29 @@ int main()
 	cin.tie(false);
 	cout.tie(false);
 	ios::sync_with_stdio(false);
+	
+	string break_files[5] = 
+		{
+			"sound\\break_1.wav",
+			"sound\\break_2.wav",
+			"sound\\break_3.wav",
+			"sound\\break_4.wav",
+			"sound\\break_5.wav"
+		};
+	string cast_files[5] =
+		{
+			"sound\\cast_1.wav",
+			"sound\\cast_2.wav",
+			"sound\\cast_3.wav",
+			"sound\\cast_4.wav",
+			"sound\\cast_5.wav"
+		};
+	string move_file = "sound\\move.wav";
 
 	array_2d* bbuyo_obj = new array_2d();
+
+	vector<thread> workers;
+	sound sound_effect(break_files, cast_files, move_file, 5);
 
 	cout << "BBuyo BBuyo Start!!" << '\n';
 	cout << "Waiting . . . ";
@@ -58,20 +81,25 @@ int main()
 			{
 				case 'a':
 					bb.move(0);
+					workers.push_back(thread(sound_effect.play_move_sound));
 					break;
 				case 'd': 
 					bb.move(1);
+					workers.push_back(thread(sound_effect.play_move_sound));
 					break;
 				case 's':
 					bb.move(2);
+					workers.push_back(thread(sound_effect.play_move_sound));
 					down_flag = true;
 					break;
 				case 'x':
 					bb.down_all();
+					workers.push_back(thread(sound_effect.play_move_sound));
 					down_flag = true;
 					break;
 				case 'e':
 					bb.rotate();
+					workers.push_back(thread(sound_effect.play_move_sound));
 					break;
 			}
 
@@ -79,12 +107,15 @@ int main()
 			{
 				bbuyo_obj->down_all();
 				bbuyo_obj->print();
-				Sleep(1000);
-				while (bbuyo_obj->explosion())
+				Sleep(1500);
+
+				int explo = 0;
+				while (bbuyo_obj->explosion(explo))
 				{
+					workers.push_back(thread(sound_effect.play_break_sound, explo-1));
 					bbuyo_obj->down_all();
 					bbuyo_obj->print();
-					Sleep(1000);
+					Sleep(1500);
 				}
 
 				types = BT(engine);
@@ -99,6 +130,9 @@ int main()
 			bbuyo_obj->print();
 		}
 	}
+
+	for (int i = 0; i < workers.size(); i++)
+		workers[i].join();
 
 	cout << "GAME OVER!!" << '\n';
 	cout << "Your Final Score : " << bbuyo_obj->get_score();
