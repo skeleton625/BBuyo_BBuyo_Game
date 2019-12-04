@@ -135,7 +135,7 @@ void block::can_merge()
 
 bool block::can_explosion()
 {
-	if (group->get_set_size() > 3)
+	if (group->get_set_size() > 3 && color != 4)
 		return true;
 	else
 		return false;
@@ -144,7 +144,7 @@ bool block::can_explosion()
 // ??
 bool block::find_merge(block *b)
 {
-	if (b->color == 0 || b->color == 4)
+	if (b->color == 0)
 		return false;
 
 	set<block*> tmp = group->get_set();
