@@ -12,6 +12,7 @@ class array_2d
 {
 private:
 	int color[5] = { 15, 1, 2, 4, 8 };
+	int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
 	// 폭파된 블록을 set 컨테어너에서 제거한 함수
 	void remove_explosion();
 	// 뿌요뿌요 게임의 현재 점수

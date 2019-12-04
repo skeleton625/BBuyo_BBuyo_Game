@@ -75,25 +75,12 @@ bool array_2d::can_make(int types)
 // 블록 폭파 관련 함수들
 int array_2d::explosion(int& cnt)
 {
-	int nx, ny, col;
-	int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
-
 	bool flag = false;
 	for (color_block* blocks : explosion_s)
 	{
 		++cnt;
 		for (block* b : blocks->get_set())
 		{
-			for (int i = 0; i < 4; i++)
-			{
-				col = 5;
-				nx = dir[i][0] + b->get_x();
-				ny = dir[i][1] + b->get_y();
-				if (block_array[nx][ny] != NULL)
-					col = block_array[nx][ny]->get_color();
-				if (col == 4)
-					SAFE_DELETE(block_array[nx][ny]);
-			}
 			block_array[b->get_x()][b->get_y()] = NULL;
 			SAFE_DELETE(b);
 		}
@@ -220,7 +207,20 @@ void array_2d::down_all()
 				continue;
 			}
 			if (block_array[i][j]->can_explosion())
+			{
+				int nx, ny;
+				block* b = block_array[i][j];
+				for (int k = 0; k < 4; k++)
+				{
+					nx = dir[k][0] + b->get_x();
+					ny = dir[k][1] + b->get_y();
+					if (block_array[nx][ny] != NULL &&
+						block_array[nx][ny]->get_color() == 4)
+						insert_explosion(block_array[nx][ny]->get_group());
+				}
 				insert_explosion(block_array[i][j]->get_group());
+			}
+				
 		}
 		if (flag == W - 2)
 			break;
