@@ -20,7 +20,7 @@ sound::sound(string* _break, string* _cast, string _move, int s)
 void sound::play_break_sound(int _num)
 {
 	if (_num > file_count)
-		_num = file_count;
+		_num = file_count-1;
 
 	PlaySound(break_file[_num].c_str(), NULL, SND_FILENAME);
 	PlaySound(cast_file[_num].c_str(), NULL, SND_FILENAME);
