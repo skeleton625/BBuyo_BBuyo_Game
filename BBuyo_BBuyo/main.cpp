@@ -43,7 +43,8 @@ int main()
 	cin.tie(false);
 	cout.tie(false);
 	ios::sync_with_stdio(false);
-	
+
+	// 음성 파일 제목 변수들
 	string break_files[5] = 
 		{
 			"sound\\break_1.wav",
@@ -62,6 +63,7 @@ int main()
 		};
 	string move_file = "sound\\move.wav";
 
+	// 뿌요뿌요 메인 객체
 	array_2d* bbuyo_obj = new array_2d();
 
 	vector<thread> workers;
