@@ -3,13 +3,11 @@
 #include <windows.h> 
 #include "block.h"
 #include "array_2d.h"
-#include "big_block.h"
 #include "color_block.h"
 
 int array_2d::score = 0;
-int array_2d::explo_cnt = 0;
-
-block *array_2d::block_array[H][W];
+block* array_2d::block_array[H][W];
+block* array_2d::next_block_array[WH][WH];
 set<color_block*> array_2d::explosion_s;
 
 // 뿌요뿌요 생성자
@@ -20,8 +18,7 @@ array_2d::array_2d()
 		for (int j = 1; j < W - 1; j++)
 			block_array[i][j] = NULL;
 	}
-	
-	explo_cnt = 0;
+
 	score = 0;
 	explosion_s = set<color_block*>();
 
@@ -29,20 +26,28 @@ array_2d::array_2d()
 	{
 		block_array[i][0] = new block(0);
 		block_array[i][0]->set_fixed(true);
-		block_array[i][0]->set_location(i, 0);
+		block_array[i][0]->set_location(i, 0, true);
 		block_array[i][W - 1] = new block(0);
 		block_array[i][W - 1]->set_fixed(true);
-		block_array[i][W - 1]->set_location(i, W - 1);
+		block_array[i][W - 1]->set_location(i, W - 1, true);
 	}
 
 	for (int i = 0; i < W; i++)
 	{
 		block_array[0][i] = new block(0);
 		block_array[0][i]->set_fixed(true);
-		block_array[0][i]->set_location(0, i);
+		block_array[0][i]->set_location(0, i, true);
 		block_array[H - 1][i] = new block(0);
 		block_array[H - 1][i]->set_fixed(true);
-		block_array[H - 1][i]->set_location(H - 1, i);
+		block_array[H - 1][i]->set_location(H - 1, i, true);
+	}
+
+	for (int i = 0; i < WH; i++)
+	{
+		next_block_array[i][0] = new block(0);
+		next_block_array[i][WH - 1] = new block(0);
+		next_block_array[0][i] = new block(0);
+		next_block_array[WH - 1][i] = new block(0);
 	}
 }
 
@@ -78,15 +83,20 @@ int array_2d::explosion(int& cnt)
 	bool flag = false;
 	for (color_block* blocks : explosion_s)
 	{
-		++cnt;
+		if (blocks->get_color() != 4)
+		{
+			++score;
+			++cnt;
+		}
 		for (block* b : blocks->get_set())
 		{
 			block_array[b->get_x()][b->get_y()] = NULL;
 			SAFE_DELETE(b);
 		}
 		flag = true;
-		explo_cnt++;
+		
 	}
+
 	if (flag)
 		remove_explosion();
 	else
@@ -134,6 +144,26 @@ void array_2d::print()
 		}
 		cout << '\n';
 	}
+
+	cout << "\nNext Block\n";
+	for (int i = 0; i < WH; i++)
+	{
+		for (int j = 0; j < WH; j++)
+		{
+			if (next_block_array[i][j] == NULL)
+				cout << "  ";
+			else
+			{
+				int col = next_block_array[i][j]->get_color();
+				set_color(color[col]);
+				if (col == 0)
+					cout << "■";
+				else
+					cout << "●";
+			}
+		}
+		cout << '\n';
+	}
 }
 
 void array_2d::set_color(int fore)
@@ -147,18 +177,11 @@ int array_2d::get_score() { return score; }
 // 뿌요뿌요 게임 블록 추가, 삭제 함수들
 void array_2d::insert(vector<block*> v)
 {
-	int nx, ny;
 	for (block* b : v)
 	{
-		nx = b->get_x();
-		ny = b->get_y();
-		block_array[nx][ny] = b;
-	}
-
-	if (explo_cnt > 0)
-	{
-		score += explo_cnt;
-		explo_cnt = 0;
+		int nx = b->get_x();
+		int ny = b->get_y();
+		next_block_array[nx + 1][ny] = b;
 	}
 }
 
@@ -225,4 +248,28 @@ void array_2d::down_all()
 		if (flag == W - 2)
 			break;
 	}
+}
+
+big_block array_2d::set_next_block()
+{
+	int nx, ny;
+	for (int i = 1; i < WH - 1; i++)
+	{
+		for (int j = 1; j < WH - 1; j++)
+			next_block_array[i][j] = NULL;
+	}
+
+	for (block* b : next_block.get_blocks())
+	{
+		nx = b->get_x();
+		ny = b->get_y();
+		block_array[nx][ny] = b;
+	}
+	
+	return next_block;
+}
+
+void array_2d::set_next_block(big_block bb)
+{
+	next_block = bb;
 }
