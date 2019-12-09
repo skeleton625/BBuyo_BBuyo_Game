@@ -10,16 +10,30 @@
 #include "cross_block.h"
 using namespace std;
 
-big_block generate_block(int types, int* bs)
+int inp = 0;
+int types = 0;
+int colors[5];
+bool down_flag = false;
+random_device random;
+mt19937 engine(random());
+uniform_int_distribution<int> BT(0, 2);
+uniform_int_distribution<int> BC(1, 4);
+
+big_block generate_next_block()
 {
+	types = BT(engine);
+	int colors[5];
+	for (int i = 0; i < 5; i++)
+		colors[i] = BC(engine);
+
 	switch (types)
 	{
-		case 0:
-			return fold_block(bs[0], bs[1], bs[2]);
-		case 1:
-			return tree_block(bs[0], bs[1], bs[2]);
-		case 2:
-			return cross_block(bs[0], bs[1], bs[2], bs[3], bs[4]);
+	case 0:
+		return fold_block(colors[0], colors[1], colors[2]);
+	case 1:
+		return tree_block(colors[0], colors[1], colors[2]);
+	case 2:
+		return cross_block(colors[0], colors[1], colors[2], colors[3], colors[4]);
 	}
 	return NULL;
 }
@@ -30,33 +44,33 @@ int main()
 	cout.tie(false);
 	ios::sync_with_stdio(false);
 	
-	// 사운드 효과 음성 파일 경로 변수들
-	string *break_files;
-	string *cast_files;
-	string move_file;
+	string break_files[5] = 
+		{
+			"sound\\break_1.wav",
+			"sound\\break_2.wav",
+			"sound\\break_3.wav",
+			"sound\\break_4.wav",
+			"sound\\break_5.wav"
+		};
+	string cast_files[5] =
+		{
+			"sound\\cast_1.wav",
+			"sound\\cast_2.wav",
+			"sound\\cast_3.wav",
+			"sound\\cast_4.wav",
+			"sound\\cast_5.wav"
+		};
+	string move_file = "sound\\move.wav";
 
 	array_2d* bbuyo_obj = new array_2d();
 
 	vector<thread> workers;
 	sound sound_effect(break_files, cast_files, move_file, 5);
 
-	cout << "BBuyo BBuyo Start!!" << '\n';
-	cout << "Waiting . . . ";
-
-	//Sleep(3000);
-
-	random_device random;
-	mt19937 engine(random());
-	uniform_int_distribution<int> BT(0, 2);
-	uniform_int_distribution<int> BC(1, 4);
-	
-	int inp = 0, types = 0;
-	int colors[5];
-	bool down_flag = false;
-
-	for (int i = 0; i < 5; i++)
-		colors[i] = BC(engine);
-	big_block bb = generate_block(BT(engine), colors);
+	bbuyo_obj->set_next_block(generate_next_block());
+	big_block bb = bbuyo_obj->set_next_block();
+	bbuyo_obj->print();
+	bbuyo_obj->set_next_block(generate_next_block());
 	bbuyo_obj->print();
 
 	while (true)
@@ -94,7 +108,7 @@ int main()
 			{
 				bbuyo_obj->down_all();
 				bbuyo_obj->print();
-				Sleep(1500);
+				Sleep(1200);
 
 				int explo = 0;
 				while (bbuyo_obj->explosion(explo))
@@ -103,16 +117,14 @@ int main()
 					workers.push_back(thread(sound_effect.play_break_sound, explo-1));
 					bbuyo_obj->down_all();
 					bbuyo_obj->print();
-					Sleep(1500);
+					Sleep(1200);
 				}
 
-				types = BT(engine);
-				if(!bbuyo_obj->can_make(types))
+				if (!bbuyo_obj->can_make(types))
 					break;
 
-				for (int i = 0; i < 5; i++)
-					colors[i] = BC(engine);
-				bb = generate_block(BT(engine), colors);
+				bb = bbuyo_obj->set_next_block();
+				bbuyo_obj->set_next_block(generate_next_block());
 			}
 			down_flag = false;
 			bbuyo_obj->print();
