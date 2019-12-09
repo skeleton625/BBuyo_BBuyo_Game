@@ -20,13 +20,14 @@ block::block(int color)
 	fixed = false;
 	x = 0, y = 0;
 	this->color = color;
-	group = new color_block(this);
+	group = new color_block(this, color);
 }
 
-void block::set_location(int x, int y) 
+void block::set_location(int x, int y, bool is_init) 
 {
 	this->x = x, this->y = y; 
-	array_2d::insert(x, y, this);
+	if(!is_init)
+		array_2d::insert(x, y, this);
 }
 
 
@@ -70,7 +71,7 @@ void block::down_all(bool flag)
 // 매개변수 블록과 현재 블록의 그룹을 합침
 void block::merge(block *b)
 {
-	color_block* new_blocks = new color_block(NULL);
+	color_block* new_blocks = new color_block(NULL, color);
 	color_block* d1 = b->get_group();
 	color_block* d2 = group;
 	new_blocks->insert(d1->get_set());
@@ -86,7 +87,7 @@ void block::split(block *b)
 	if(it != g.end())
 		g.erase(it);
 	group = NULL;
-	group = new color_block(this);
+	group = new color_block(this, color);
 }
 
 // 이도 가능 여부 파악 함수들
