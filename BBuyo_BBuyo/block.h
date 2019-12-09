@@ -27,7 +27,7 @@ public:
 	void set_color(int color);
 	void set_fixed(bool fixed);
 	void set_group(class color_block* group);
-	void set_location(int x, int y);
+	void set_location(int x, int y, bool is_init);
 
 	// 블록의 이동 함수들
 	void right();

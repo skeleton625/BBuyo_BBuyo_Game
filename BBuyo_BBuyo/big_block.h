@@ -8,8 +8,8 @@ protected:
 	int rot_cnt;
 	// 큰 블록에 연결된 블록들 변수
 	vector<class block*> v;
-	void rotate_vertex(int& x, int& y);
 	bool can_rotate();
+	void rotate_vertex(int& x, int& y);
 private:
 	// 큰 블록의 중간 블록 위치 변수
 	int mid_x, mid_y;
@@ -20,6 +20,7 @@ private:
 	bool can_right();
 public:
 	// 큰 블록의 생성자, 소멸자
+	big_block();
 	big_block(int type);
 	~big_block();
 	// 큰 블록의 이동, 회전 함수
@@ -31,4 +32,6 @@ public:
 	void down();
 	void down_all();
 	bool can_down();
+	// 빅 블록 반환 함수
+	vector<block*> get_blocks();
 };
