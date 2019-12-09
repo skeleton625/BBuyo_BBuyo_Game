@@ -3,9 +3,10 @@
 #include "color_block.h"
 
 // 같은 색 모임 객체 생성자
-color_block::color_block(block* b)
+color_block::color_block(block* b, int color)
 {
-	s = set<block*>();
+	this->color = color;
+	this->s = set<block*>();
 	if (b != NULL)
 		s.insert(b);
 }
@@ -31,3 +32,4 @@ set<block*> color_block::get_set() { return s; }
 
 // 해당 객체의 같은 색 모임 숫자 반환 함수
 int color_block::get_set_size() { return s.size(); }
+int color_block::get_color() { return color; }
