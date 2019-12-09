@@ -3,6 +3,13 @@
 #include "big_block.h"
 #include "color_block.h"
 
+big_block::big_block()
+{
+	rot_cnt = 0;
+	block_type = 0;
+	mid_x = 0, mid_y = 0;
+}
+
 // 큰 블록의 생성자, 소멸자
 big_block::big_block(int _type)
 {
@@ -117,7 +124,7 @@ void big_block::rotate()
 		x = b->get_x();
 		y = b->get_y();
 		rotate_vertex(x, y);
-		b->set_location(x, y);
+		b->set_location(x, y, false);
 	}
 
 	++rot_cnt;
@@ -177,4 +184,9 @@ void big_block::down_all()
 	}
 	for (block* b : v)
 		b->down_all(false);
+}
+
+vector<block*> big_block::get_blocks()
+{
+	return v;
 }
