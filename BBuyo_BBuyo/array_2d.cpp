@@ -1,6 +1,4 @@
-#include <cmath>
 #include <iostream>
-#include <windows.h> 
 #include "block.h"
 #include "array_2d.h"
 #include "color_block.h"
@@ -57,19 +55,14 @@ bool array_2d::can_make(int types)
 	switch (types)
 	{
 	case 0:
-		if (block_array[1][3] != NULL ||
-			block_array[2][3] != NULL ||
+		if (block_array[2][3] != NULL ||
 			block_array[2][2] != NULL)
 			return false;
 	case 1:
-		if (block_array[1][3] != NULL ||
-			block_array[2][3] != NULL ||
-			block_array[3][3] != NULL)
+		if (block_array[3][3] != NULL)
 			return false;
 	case 2:
-		if (block_array[1][3] != NULL ||
-			block_array[2][2] != NULL ||
-			block_array[2][3] != NULL ||
+		if (block_array[2][3] != NULL ||
 			block_array[2][4] != NULL ||
 			block_array[3][3] != NULL)
 			return false;
@@ -88,6 +81,7 @@ int array_2d::explosion(int& cnt)
 			++score;
 			++cnt;
 		}
+
 		for (block* b : blocks->get_set())
 		{
 			block_array[b->get_x()][b->get_y()] = NULL;
@@ -168,8 +162,7 @@ void array_2d::print()
 
 void array_2d::set_color(int fore)
 {
-	SetConsoleTextAttribute
-			(GetStdHandle(STD_OUTPUT_HANDLE), fore);
+	cout << "\033[1;" << fore << 'm';
 }
 
 int array_2d::get_score() { return score; }
