@@ -15,7 +15,7 @@ class array_2d
 private:
 	big_block next_block;
 	
-	int color[5] = { 15, 1, 2, 4, 8 };
+	int color[5] = { 97, 34, 32, 31, 90 };
 	int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
 	// 뿌요뿌요 게임의 현재 점수
 	static int score;
