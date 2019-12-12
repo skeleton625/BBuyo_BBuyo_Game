@@ -71,66 +71,62 @@ int main()
 
 	bbuyo_obj->set_next_block(generate_next_block());
 	big_block bb = bbuyo_obj->set_next_block();
-	bbuyo_obj->print();
 	bbuyo_obj->set_next_block(generate_next_block());
 	bbuyo_obj->print();
 
 	while (true)
 	{
-		if (_kbhit())
+		inp = _getch();
+		switch (inp)
 		{
-			inp = _getch();
-			switch (inp)
-			{
-				case 'a':
-					bb.move(0);
-					workers.push_back(thread(sound_effect.play_move_sound));
-					break;
-				case 'd': 
-					bb.move(1);
-					workers.push_back(thread(sound_effect.play_move_sound));
-					break;
-				case 's':
-					bb.move(2);
-					workers.push_back(thread(sound_effect.play_move_sound));
-					down_flag = true;
-					break;
-				case 'x':
-					bb.down_all();
-					workers.push_back(thread(sound_effect.play_move_sound));
-					down_flag = true;
-					break;
-				case 'e':
-					bb.rotate();
-					workers.push_back(thread(sound_effect.play_move_sound));
-					break;
-			}
+		case 'a':
+			bb.move(0);
+			workers.push_back(thread(sound_effect.play_move_sound));
+			break;
+		case 'd':
+			bb.move(1);
+			workers.push_back(thread(sound_effect.play_move_sound));
+			break;
+		case 's':
+			bb.move(2);
+			workers.push_back(thread(sound_effect.play_move_sound));
+			down_flag = true;
+			break;
+		case 'x':
+			bb.down_all();
+			workers.push_back(thread(sound_effect.play_move_sound));
+			down_flag = true;
+			break;
+		case 'e':
+			bb.rotate();
+			workers.push_back(thread(sound_effect.play_move_sound));
+			break;
+		}
 
-			if (!bb.can_down() && down_flag)
+		if (!bb.can_down() && down_flag)
+		{
+			bbuyo_obj->down_all();
+			bbuyo_obj->print();
+			Sleep(1200);
+
+			int explo = 0;
+			while (bbuyo_obj->explosion(explo))
 			{
+				// ??
+				workers.push_back(thread(sound_effect.play_break_sound, explo - 1));
 				bbuyo_obj->down_all();
 				bbuyo_obj->print();
 				Sleep(1200);
-
-				int explo = 0;
-				while (bbuyo_obj->explosion(explo))
-				{
-					// ??
-					workers.push_back(thread(sound_effect.play_break_sound, explo-1));
-					bbuyo_obj->down_all();
-					bbuyo_obj->print();
-					Sleep(1200);
-				}
-
-				if (!bbuyo_obj->can_make(types))
-					break;
-
-				bb = bbuyo_obj->set_next_block();
-				bbuyo_obj->set_next_block(generate_next_block());
 			}
-			down_flag = false;
-			bbuyo_obj->print();
+
+			if (!bbuyo_obj->can_make(types))
+				break;
+
+			bb = bbuyo_obj->set_next_block();
+			bbuyo_obj->set_next_block(generate_next_block());
 		}
+		down_flag = false;
+		bbuyo_obj->print();
 	}
 
 	for (int i = 0; i < workers.size(); i++)
